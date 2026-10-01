@@ -20,7 +20,7 @@ button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 ul{list-style:none;padding:0;margin:0}li{display:flex;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--bd)}
 li .n{width:2.2em;color:var(--mu);text-align:right}li .t{flex:1}li a{color:var(--ac);font-size:.85rem}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--bd)}.dot.k{background:var(--ok)}
-.hide{display:none}#rp{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}#rp>div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;width:100%;max-width:420px}#rp textarea{width:100%;min-height:90px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;margin-top:6px}#cd{touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .15s,border-color .15s;cursor:grab}img{-webkit-user-drag:none}
+.hide{display:none}#cd{position:relative}.flag{position:absolute;top:8px;right:8px;padding:4px 10px}#rp{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}#rp>div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;width:100%;max-width:420px}#rp textarea{width:100%;min-height:90px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;margin-top:6px}#cd{touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .15s,border-color .15s;cursor:grab}img{-webkit-user-drag:none}
 h2{font-size:1rem;margin:18px 0 4px}h2.ok{color:var(--ok)}h2.no{color:var(--no)}li button{padding:4px 9px}li button.on.ok{background:var(--ok);border-color:var(--ok);color:#fff}li button.on.no{background:var(--no);border-color:var(--no);color:#fff}img{max-width:100%;max-height:48vh;border-radius:12px;object-fit:contain}
 </style></head><body><main>
 <h1>🌿 Poznávačka: výtrusné a cévnaté rostliny</h1>
@@ -61,7 +61,7 @@ const pool=()=>P.filter(p=>(grp<0||p.g===grp)&&(!only||mode==="list"||!K[p.n]));
 function build(){order=pool();if(mode!=="list")order=order.slice().sort(()=>Math.random()-.5);i=0;rev=false;render()}
 function mark(v){const p=order[i];K[p.n]=v;save();i++;rev=false;render()}
 function openRp(){const p=order[i];if(!p)return;const d=document.createElement("div");d.id="rp";
- d.innerHTML=`<div><b>Nahlásit chybu · č. ${p.n} ${p.name}</b><p class="sub">Např. špatný obrázek nebo překlep. Zprávu uvidí jen autor stránky.</p><textarea id="rpt" maxlength="800" placeholder="Co je špatně?"></textarea><div class="row" style="margin-top:8px"><button data-rc="1">Zrušit</button><button class="on" data-rs="${p.n}">Odeslat</button></div><div class="sub" id="rps"></div></div>`;document.body.appendChild(d)}
+ d.innerHTML=`<div><b>Nahlásit chybu</b><p class="sub">Např. špatný obrázek nebo překlep. Zprávu uvidí jen autor stránky.</p><textarea id="rpt" maxlength="800" placeholder="Co je špatně?"></textarea><div class="row" style="margin-top:8px"><button data-rc="1">Zrušit</button><button class="on" data-rs="${p.n}">Odeslat</button></div><div class="sub" id="rps"></div></div>`;document.body.appendChild(d)}
 async function sendRp(n){const t=$("rpt").value.trim();if(!t)return;const p=P[n-1];if(!FORM.url){$("rps").textContent="Odesílání zatím není nastavené (autor musí vyplnit FORM v index.html).";return}$("rps").textContent="Odesílám…";
  try{const b={subject:`Poznávačka: č. ${n} ${p.name}`,cislo:n,rostlina:p.name,zprava:t,stranka:location.href};if(FORM.key)b.access_key=FORM.key;
   const r=await fetch(FORM.url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(b)});
@@ -80,8 +80,8 @@ function render(){
  const el=$("v-cards");
  if(i>=order.length){el.innerHTML=`<div class="card"><div class="name">${order.length?"Hotovo 🎉":"Nic k procvičení"}</div><button data-r="1">Znovu</button></div>`;return}
  const p=order[i];
- el.innerHTML=`<div class="card" id="cd"><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${FILES[p.n]?encodeURIComponent(FILES[p.n]):String(p.n).padStart(3,"0")+".jpg"}" data-n="${p.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">${rev?p.name:"?"}</div><div class="grp">${G[p.g][0]}${rev?"":" · klikni na obrázek pro název"}</div>
- <div class="row" style="justify-content:center;margin-top:10px"><a class="btn" href="${link(p)}" target="_blank" rel="noopener">🔍 Další obrázky</a><button data-rp="1">⚑</button></div></div>
+ el.innerHTML=`<div class="card" id="cd"><button class="flag" data-rp="1" title="Nahlásit chybu" aria-label="Nahlásit chybu">⚑</button><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${FILES[p.n]?encodeURIComponent(FILES[p.n]):String(p.n).padStart(3,"0")+".jpg"}" data-n="${p.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">${rev?p.name:"?"}</div><div class="grp">${G[p.g][0]}${rev?"":" · klikni na obrázek pro název"}</div>
+ <div class="row" style="justify-content:center;margin-top:10px"><a class="btn" href="${link(p)}" target="_blank" rel="noopener">🔍 Další obrázky</a></div></div>
  <div class="row"><button class="no" data-k="0" style="flex:1">← Neumím</button><button class="ok" data-k="1" style="flex:1">Umím →</button></div>`;
 }
 document.addEventListener("click",e=>{const d=e.target.closest("button");if(!d)return;
@@ -100,3 +100,4 @@ document.addEventListener("pointerup",endDrag);
 document.addEventListener("pointercancel",()=>{drag=false;const c=$("cd");if(c){c.style.transition="";c.style.transform="";c.style.borderColor=""}});
 build();loadFiles();
 </script></body></html>
+ 
