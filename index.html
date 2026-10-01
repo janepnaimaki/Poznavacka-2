@@ -39,7 +39,16 @@ const P=[];G.forEach(([g,s],gi)=>s.split("|").forEach(n=>P.push({n:P.length+1,na
 let K={};try{K=JSON.parse(localStorage.getItem("pz")||"{}")}catch(e){}
 const save=()=>{try{localStorage.setItem("pz",JSON.stringify(K))}catch(e){}};
 let IMG={};
-const EX=["jpg","png","jpeg","webp","gif","svg"];
+const EX=["jpg","png","jpeg","webp","gif","svg","JPG","PNG","JPEG","jpe","jfif","avif","bmp"];
+let FILES={};
+try{FILES=JSON.parse(localStorage.getItem("pzf")||"{}")}catch(e){}
+async function loadFiles(){try{
+ const h=location.hostname.split(".")[0],r=location.pathname.split("/")[1];
+ if(!location.hostname.endsWith("github.io")||!r)return;
+ const j=await(await fetch(`https://api.github.com/repos/${h}/${r}/contents/obrazky`)).json();
+ if(!Array.isArray(j))return;const f={};
+ j.forEach(x=>{const m=x.name.match(/^(\d+)/);if(m)f[+m[1]]=x.name});
+ FILES=f;try{localStorage.setItem("pzf",JSON.stringify(f))}catch(e){}render()}catch(e){}}
 function nx(el){const k=+el.dataset.i+1;if(k>=EX.length){el.style.display="none";return}el.dataset.i=k;el.src="obrazky/"+String(el.dataset.n).padStart(3,"0")+"."+EX[k]}
 const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open("pz",1);r.onupgradeneeded=()=>r.result.createObjectStore("s");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 async function idbSet(v){try{const d=await idb();d.transaction("s","readwrite").objectStore("s").put(v,"imgs")}catch(e){}}
@@ -64,7 +73,7 @@ function render(){
  const el=$("v-cards");
  if(i>=order.length){el.innerHTML=`<div class="card"><div class="name">${order.length?"Hotovo 🎉":"Nic k procvičení"}</div><button data-r="1">Znovu</button></div>`;return}
  const p=order[i];
- el.innerHTML=`<div class="card" id="cd"><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${String(p.n).padStart(3,"0")}.jpg" data-n="${p.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">${rev?p.name:"?"}</div><div class="grp">${G[p.g][0]}${rev?"":" · klikni na obrázek pro název"}</div>
+ el.innerHTML=`<div class="card" id="cd"><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${FILES[p.n]?encodeURIComponent(FILES[p.n]):String(p.n).padStart(3,"0")+".jpg"}" data-n="${p.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">${rev?p.name:"?"}</div><div class="grp">${G[p.g][0]}${rev?"":" · klikni na obrázek pro název"}</div>
  <div class="row" style="justify-content:center;margin-top:10px"><a class="btn" href="${link(p)}" target="_blank" rel="noopener">🔍 Další obrázky</a></div></div>
  <div class="row"><button class="no" data-k="0" style="flex:1">← Neumím</button><button class="ok" data-k="1" style="flex:1">Umím →</button></div>`;
 }
@@ -81,6 +90,5 @@ function endDrag(){if(!drag)return;drag=false;const c=$("cd");if(!c)return;c.sty
  else if(Math.abs(dx)<8){rev=!rev;render()}else{c.style.transform="";c.style.borderColor=""}}
 document.addEventListener("pointerup",endDrag);
 document.addEventListener("pointercancel",()=>{drag=false;const c=$("cd");if(c){c.style.transition="";c.style.transform="";c.style.borderColor=""}});
-build();
+build();loadFiles();
 </script></body></html>
- 
