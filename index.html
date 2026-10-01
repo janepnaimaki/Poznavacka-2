@@ -82,7 +82,7 @@ const pool=()=>P.filter(p=>(grp<0||p.g===grp)&&(!only||mode==="list"||!K[p.n]));
 function build(){order=pool();if(mode!=="list")order=order.slice().sort(()=>Math.random()-.5);i=0;rev=false;render()}
 function mark(v){const p=order[i];K[p.n]=v;save();i++;rev=false;render()}
 function openRp(){const p=order[i];if(!p)return;const d=document.createElement("div");d.id="rp";
- d.innerHTML=`<div><b>Nahlásit chybu</b><p class="sub">Např. špatný obrázek nebo překlep. Zprávu uvidí jen autor stránky.</p><textarea id="rpt" maxlength="800" placeholder="Co je špatně?"></textarea><div class="row" style="margin-top:8px"><button data-rc="1">Zrušit</button><button class="on" data-rs="${p.n}">Odeslat</button></div><div class="sub" id="rps"></div></div>`;document.body.appendChild(d)}
+ d.innerHTML=`<div><b>Nahlásit chybu</b><p class="sub">Např. špatný obrázek nebo překlep. Zprávu uvidí jen autor stránky (KDŽ).</p><textarea id="rpt" maxlength="800" placeholder="Co je špatně?"></textarea><div class="row" style="margin-top:8px"><button data-rc="1">Zrušit</button><button class="on" data-rs="${p.n}">Odeslat</button></div><div class="sub" id="rps"></div></div>`;document.body.appendChild(d)}
 async function sendRp(n){const t=$("rpt").value.trim();if(!t)return;const p=P[n-1];if(!FORM.url){$("rps").textContent="Odesílání zatím není nastavené (autor musí vyplnit FORM v index.html).";return}$("rps").textContent="Odesílám…";
  try{const b={subject:`Poznávačka: č. ${n} ${p.name}`,cislo:n,rostlina:p.name,zprava:t,stranka:location.href};if(FORM.key)b.access_key=FORM.key;
   const r=await fetch(FORM.url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(b)});
