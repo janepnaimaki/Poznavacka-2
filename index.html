@@ -20,7 +20,8 @@ button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 ul{list-style:none;padding:0;margin:0}li{display:flex;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--bd)}
 li .n{width:2.2em;color:var(--mu);text-align:right}li .t{flex:1}li a{color:var(--ac);font-size:.85rem}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--bd)}.dot.k{background:var(--ok)}
-.hide{display:none}img{max-width:100%;max-height:48vh;border-radius:12px;object-fit:contain}
+.hide{display:none}#cd{touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .15s,border-color .15s;cursor:grab}img{-webkit-user-drag:none}
+h2{font-size:1rem;margin:18px 0 4px}h2.ok{color:var(--ok)}h2.no{color:var(--no)}li button{padding:4px 9px}li button.on.ok{background:var(--ok);border-color:var(--ok);color:#fff}li button.on.no{background:var(--no);border-color:var(--no);color:#fff}img{max-width:100%;max-height:48vh;border-radius:12px;object-fit:contain}
 </style></head><body><main>
 <h1>🌿 Poznávačka: výtrusné a cévnaté rostliny</h1>
 <div class="sub">Vyšší gymnázium · 130 druhů · <span id="stat"></span></div>
@@ -46,29 +47,40 @@ async function idbGet(){try{const d=await idb();return await new Promise(res=>{c
 let mode="cards",grp=-1,only=false,i=0,rev=false,order=[];
 const $=id=>document.getElementById(id);
 const img=p=>"https://www.google.com/search?tbm=isch&q="+encodeURIComponent(p.name.replace(/\(|\)/g,"")+" rostlina");
-const pool=()=>P.filter(p=>(grp<0||p.g===grp)&&(!only||!K[p.n]));
+const pool=()=>P.filter(p=>(grp<0||p.g===grp)&&(!only||mode==="list"||!K[p.n]));
 function build(){order=pool();if(mode!=="list")order=order.slice().sort(()=>Math.random()-.5);i=0;rev=false;render()}
 function mark(v){const p=order[i];K[p.n]=v;save();i++;rev=false;render()}
 function render(){
- $("modes").innerHTML=[["cards","Procvičování"],["list","Seznam"]].map(([m,t])=>`<button class="${mode===m?"on":""}" data-m="${m}">${t}</button>`).join("")+`<button class="${only?"on":""}" data-o="1">Jen neumím</button>`;
+ $("modes").innerHTML=[["cards","Procvičování"],["list","Seznam"]].map(([m,t])=>`<button class="${mode===m?"on":""}" data-m="${m}">${t}</button>`).join("")+`<button class="${only?"on":""}" data-o="1">Jen co neumím</button><button data-x="1">↺ Reset</button>`;
  $("groups").innerHTML=[["-1","Vše"],...G.map((g,x)=>[x,g[0]])].map(([v,t])=>`<button class="${grp==v?"on":""}" data-g="${v}">${t}</button>`).join("");
- const kn=P.filter(p=>K[p.n]).length;$("stat").textContent=`umím ${kn} / ${P.length}`;$("pb").style.width=kn/P.length*100+"%";
- ["cards","test","list"].forEach(m=>$("v-"+m).classList.toggle("hide",m!==mode));
- if(mode==="list"){$("v-list").innerHTML="<ul>"+order.map(p=>`<li><span class="n">${p.n}</span><span class="dot ${K[p.n]?"k":""}"></span><span class="t">${p.name}</span><a href="${img(p)}" target="_blank" rel="noopener">obrázky ↗</a></li>`).join("")+"</ul>";return}
- const el=$("v-"+mode);
+ const kn=P.filter(p=>K[p.n]===true).length,dn=P.filter(p=>K[p.n]===false).length;
+ $("stat").textContent=`umím ${kn} · neumím ${dn} · zbývá ${P.length-kn-dn}`;$("pb").style.width=kn/P.length*100+"%";
+ ["cards","test","list"].forEach(m=>$("v-"+m).classList.toggle("hide",m!==(mode==="list"?"list":"cards")));
+ const link=p=>"https://www.google.com/search?tbm=isch&q="+encodeURIComponent(p.name.replace(/\(|\)/g,"")+" rostlina");
+ if(mode==="list"){
+  const row=p=>`<li><span class="n">${p.n}</span><span class="t">${p.name}</span><a href="${link(p)}" target="_blank" rel="noopener">obrázky ↗</a><button class="ok ${K[p.n]===true?"on":""}" data-p="${p.n}" data-v="1">✓</button><button class="no ${K[p.n]===false?"on":""}" data-p="${p.n}" data-v="0">✗</button></li>`;
+  const sec=(t,c,f)=>{const a=order.filter(f);return `<h2 class="${c}">${t} (${a.length})</h2>`+(a.length?"<ul>"+a.map(row).join("")+"</ul>":'<div class="sub">nic</div>')};
+  $("v-list").innerHTML=sec("Neumím","no",p=>K[p.n]===false)+sec("Umím","ok",p=>K[p.n]===true)+sec("Neoznačeno","",p=>K[p.n]===undefined);return}
+ const el=$("v-cards");
  if(i>=order.length){el.innerHTML=`<div class="card"><div class="name">${order.length?"Hotovo 🎉":"Nic k procvičení"}</div><button data-r="1">Znovu</button></div>`;return}
- const p=order[i],t=true,show=!t||rev;
- el.innerHTML=`<div class="card"><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${String(p.n).padStart(3,"0")}.jpg" data-n="${p.n}" data-i="0" onerror="nx(this)" alt=""><div class="name">${show?p.name:"?"}</div><div class="grp">${G[p.g][0]}</div>
- <div class="row" style="justify-content:center;margin-top:12px"><a class="btn on" style="background:var(--ac);color:#fff" href="${img(p)}" target="_blank" rel="noopener">🔍 Zobrazit obrázky</a>${t&&!rev?'<button data-s="1">Ukázat název</button>':""}</div></div>
- ${show?'<div class="row"><button class="no" data-k="0" style="flex:1">Neumím</button><button class="ok" data-k="1" style="flex:1">Umím</button></div>':""}`;
+ const p=order[i];
+ el.innerHTML=`<div class="card" id="cd"><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${String(p.n).padStart(3,"0")}.jpg" data-n="${p.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">${rev?p.name:"?"}</div><div class="grp">${G[p.g][0]}${rev?"":" · klikni na obrázek pro název"}</div>
+ <div class="row" style="justify-content:center;margin-top:10px"><a class="btn" href="${link(p)}" target="_blank" rel="noopener">🔍 Další obrázky</a></div></div>
+ <div class="row"><button class="no" data-k="0" style="flex:1">← Neumím</button><button class="ok" data-k="1" style="flex:1">Umím →</button></div>`;
 }
 document.addEventListener("click",e=>{const d=e.target.closest("button");if(!d)return;
  if(d.dataset.m){mode=d.dataset.m;build()}else if(d.dataset.g){grp=+d.dataset.g;build()}else if(d.dataset.o){only=!only;build()}
- else if(d.dataset.s){rev=true;render()}else if(d.dataset.k){mark(d.dataset.k==="1")}else if(d.dataset.r)build()});
-document.addEventListener("change",async e=>{if(e.target.id!=="fi")return;
- for(const f of e.target.files){const m=f.name.match(/^(\d+)/);if(!m)continue;
-  IMG[+m[1]]=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)})}
- idbSet(IMG);render()});
+ else if(d.dataset.x){if(confirm("Smazat všechno označení Umím / Neumím?")){K={};save();build()}}
+ else if(d.dataset.p){K[+d.dataset.p]=d.dataset.v==="1";save();render()}
+ else if(d.dataset.k){mark(d.dataset.k==="1")}else if(d.dataset.r)build()});
+let sx=0,dx=0,drag=false;
+document.addEventListener("pointerdown",e=>{const c=e.target.closest("#cd");if(!c||e.target.closest("a,button"))return;drag=true;sx=e.clientX;dx=0;c.style.transition="none";try{c.setPointerCapture(e.pointerId)}catch(x){}});
+document.addEventListener("pointermove",e=>{if(!drag)return;const c=$("cd");if(!c)return;dx=e.clientX-sx;c.style.transform=`translateX(${dx}px) rotate(${dx/25}deg)`;c.style.borderColor=dx>40?"var(--ok)":dx<-40?"var(--no)":""});
+function endDrag(){if(!drag)return;drag=false;const c=$("cd");if(!c)return;c.style.transition="";
+ if(Math.abs(dx)>90){c.style.transform=`translateX(${dx>0?700:-700}px) rotate(${dx/10}deg)`;const v=dx>0;setTimeout(()=>mark(v),150)}
+ else if(Math.abs(dx)<8){rev=!rev;render()}else{c.style.transform="";c.style.borderColor=""}}
+document.addEventListener("pointerup",endDrag);
+document.addEventListener("pointercancel",()=>{drag=false;const c=$("cd");if(c){c.style.transition="";c.style.transform="";c.style.borderColor=""}});
 build();
 </script></body></html>
  
