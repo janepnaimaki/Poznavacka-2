@@ -38,6 +38,8 @@ const P=[];G.forEach(([g,s],gi)=>s.split("|").forEach(n=>P.push({n:P.length+1,na
 let K={};try{K=JSON.parse(localStorage.getItem("pz")||"{}")}catch(e){}
 const save=()=>{try{localStorage.setItem("pz",JSON.stringify(K))}catch(e){}};
 let IMG={};
+const EX=["jpg","png","jpeg","webp","gif","svg"];
+function nx(el){const k=+el.dataset.i+1;if(k>=EX.length){el.style.display="none";return}el.dataset.i=k;el.src="obrazky/"+String(el.dataset.n).padStart(3,"0")+"."+EX[k]}
 const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open("pz",1);r.onupgradeneeded=()=>r.result.createObjectStore("s");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 async function idbSet(v){try{const d=await idb();d.transaction("s","readwrite").objectStore("s").put(v,"imgs")}catch(e){}}
 async function idbGet(){try{const d=await idb();return await new Promise(res=>{const q=d.transaction("s").objectStore("s").get("imgs");q.onsuccess=()=>res(q.result||{});q.onerror=()=>res({})})}catch(e){return {}}}
@@ -48,15 +50,15 @@ const pool=()=>P.filter(p=>(grp<0||p.g===grp)&&(!only||!K[p.n]));
 function build(){order=pool();if(mode!=="list")order=order.slice().sort(()=>Math.random()-.5);i=0;rev=false;render()}
 function mark(v){const p=order[i];K[p.n]=v;save();i++;rev=false;render()}
 function render(){
- $("modes").innerHTML=[["cards","Procvičování"],["list","Seznam"]].map(([m,t])=>`<button class="${mode===m?"on":""}" data-m="${m}">${t}</button>`).join("")+`<button class="${only?"on":""}" data-o="1">Jen neumím</button><label class="btn">📁 Načíst obrázky<input type="file" id="fi" multiple accept="image/*" hidden></label>`;
+ $("modes").innerHTML=[["cards","Procvičování"],["list","Seznam"]].map(([m,t])=>`<button class="${mode===m?"on":""}" data-m="${m}">${t}</button>`).join("")+`<button class="${only?"on":""}" data-o="1">Jen neumím</button>`;
  $("groups").innerHTML=[["-1","Vše"],...G.map((g,x)=>[x,g[0]])].map(([v,t])=>`<button class="${grp==v?"on":""}" data-g="${v}">${t}</button>`).join("");
- const kn=P.filter(p=>K[p.n]).length;$("stat").textContent=`umím ${kn} / ${P.length} · obrázky ${Object.keys(IMG).length} / ${P.length}`;$("pb").style.width=kn/P.length*100+"%";
+ const kn=P.filter(p=>K[p.n]).length;$("stat").textContent=`umím ${kn} / ${P.length}`;$("pb").style.width=kn/P.length*100+"%";
  ["cards","test","list"].forEach(m=>$("v-"+m).classList.toggle("hide",m!==mode));
  if(mode==="list"){$("v-list").innerHTML="<ul>"+order.map(p=>`<li><span class="n">${p.n}</span><span class="dot ${K[p.n]?"k":""}"></span><span class="t">${p.name}</span><a href="${img(p)}" target="_blank" rel="noopener">obrázky ↗</a></li>`).join("")+"</ul>";return}
  const el=$("v-"+mode);
  if(i>=order.length){el.innerHTML=`<div class="card"><div class="name">${order.length?"Hotovo 🎉":"Nic k procvičení"}</div><button data-r="1">Znovu</button></div>`;return}
  const p=order[i],t=true,show=!t||rev;
- el.innerHTML=`<div class="card"><div class="num">č. ${p.n} · ${i+1}/${order.length}</div>${IMG[p.n]?`<img src="${IMG[p.n]}" alt="">`:""}<div class="name">${show?p.name:"?"}</div><div class="grp">${G[p.g][0]}</div>
+ el.innerHTML=`<div class="card"><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${String(p.n).padStart(3,"0")}.jpg" data-n="${p.n}" data-i="0" onerror="nx(this)" alt=""><div class="name">${show?p.name:"?"}</div><div class="grp">${G[p.g][0]}</div>
  <div class="row" style="justify-content:center;margin-top:12px"><a class="btn on" style="background:var(--ac);color:#fff" href="${img(p)}" target="_blank" rel="noopener">🔍 Zobrazit obrázky</a>${t&&!rev?'<button data-s="1">Ukázat název</button>':""}</div></div>
  ${show?'<div class="row"><button class="no" data-k="0" style="flex:1">Neumím</button><button class="ok" data-k="1" style="flex:1">Umím</button></div>':""}`;
 }
@@ -67,5 +69,6 @@ document.addEventListener("change",async e=>{if(e.target.id!=="fi")return;
  for(const f of e.target.files){const m=f.name.match(/^(\d+)/);if(!m)continue;
   IMG[+m[1]]=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)})}
  idbSet(IMG);render()});
-build();idbGet().then(v=>{IMG=v;render()});
+build();
 </script></body></html>
+ 
