@@ -20,13 +20,32 @@ button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 ul{list-style:none;padding:0;margin:0}li{display:flex;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--bd)}
 li .n{width:2.2em;color:var(--mu);text-align:right}li .t{flex:1}li a{color:var(--ac);font-size:.85rem}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--bd)}.dot.k{background:var(--ok)}
-.hide{display:none}#mp{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin-bottom:10px}#mp summary{cursor:pointer}#tl li{padding:0;border:0}#cv{width:100%;max-width:260px;aspect-ratio:1;object-fit:cover;border-radius:12px;margin:10px auto 0}#tl .th{width:36px;height:36px;border-radius:6px;object-fit:cover;max-height:none}#tl button{display:flex;align-items:center;gap:8px;border:0;background:none;text-align:left;flex:1;padding:6px 2px;color:inherit}#tl button.cur{color:var(--ac);font-weight:600}#cd{position:relative}.flag{position:absolute;top:8px;right:8px;padding:4px 10px}#rp{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}#rp>div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;width:100%;max-width:420px}#rp textarea{width:100%;min-height:90px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;margin-top:6px}#cd{touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .15s,border-color .15s;cursor:grab}img{-webkit-user-drag:none}
+.hide{display:none}main{padding-bottom:96px}
+#mb{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:5;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:0 6px 24px #0004;overflow:hidden;display:none;cursor:pointer;max-width:640px;margin:0 auto}
+#mbp{display:block;height:2px;background:var(--ac);width:0}#mb .mbi{display:flex;align-items:center;gap:6px;padding:8px 10px}
+.mbt{flex:1;min-width:0}.mbt b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.95rem}.mbt small{color:var(--mu)}
+#mb button{border:0;background:none;font-size:1.15rem;padding:6px 8px}#mb .pp{background:var(--ac);color:#fff;border-radius:50%;width:40px;height:40px;padding:0}
+.mbcv,.th{border-radius:8px;object-fit:cover;flex:none;max-height:none}.mbcv{width:44px;height:44px}.th{width:40px;height:40px;border-radius:6px}
+.ph{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--ac),var(--bd));color:#fff;font-size:1.3rem}
+#sh{position:fixed;inset:0;z-index:8;background:var(--bg);transform:translateY(100%);visibility:hidden;transition:transform .3s,visibility .3s;overflow-y:auto}#sh.open{transform:none;visibility:visible}
+#shbg{position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:cover;border-radius:0;filter:blur(60px) saturate(1.3);opacity:.35;display:none;pointer-events:none}
+.shi{position:relative;max-width:480px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.shh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:var(--mu);font-size:.85rem}.shh button{border:0;background:none;font-size:1.5rem;padding:0 6px}
+.shcv{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;box-shadow:0 12px 40px #0006;max-height:none;font-size:5rem}
+.sht{margin:18px 0 6px;font-size:1.3rem}#sk{width:100%;accent-color:var(--ac)}.tm{display:flex;justify-content:space-between;color:var(--mu);font-size:.8rem}
+.ctl{display:flex;justify-content:space-between;align-items:center;margin:10px 0 18px}.ctl button{border:0;background:none;font-size:1.4rem;padding:8px}.ctl .big{width:64px;height:64px;border-radius:50%;background:var(--tx);color:var(--bg);font-size:1.6rem;padding:0}.ctl .act{color:var(--ac)}
+#tl button{display:flex;align-items:center;gap:10px;border:0;background:none;text-align:left;flex:1;padding:6px 2px;color:inherit}#tl button.cur{color:var(--ac);font-weight:600}
+#mp{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin-bottom:10px}#mp summary{cursor:pointer}#tl li{padding:0;border:0}#cv{width:100%;max-width:260px;aspect-ratio:1;object-fit:cover;border-radius:12px;margin:10px auto 0}#tl .th{width:36px;height:36px;border-radius:6px;object-fit:cover;max-height:none}#tl button{display:flex;align-items:center;gap:8px;border:0;background:none;text-align:left;flex:1;padding:6px 2px;color:inherit}#tl button.cur{color:var(--ac);font-weight:600}#cd{position:relative}.flag{position:absolute;top:8px;right:8px;padding:4px 10px}#rp{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}#rp>div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;width:100%;max-width:420px}#rp textarea{width:100%;min-height:90px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;margin-top:6px}#cd{touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .15s,border-color .15s;cursor:grab}img{-webkit-user-drag:none}
 h2{font-size:1rem;margin:18px 0 4px}h2.ok{color:var(--ok)}h2.no{color:var(--no)}li button{padding:4px 9px}li button.on.ok{background:var(--ok);border-color:var(--ok);color:#fff}li button.on.no{background:var(--no);border-color:var(--no);color:#fff}img{max-width:100%;max-height:48vh;border-radius:12px;object-fit:contain}
 </style></head><body><main>
 <h1>🌿 Poznávačka: výtrusné a cévnaté rostliny</h1>
 <div class="sub">Vyšší gymnázium · 130 druhů · <span id="stat"></span></div>
-<details id="mp"><summary>🎵 Hudba</summary><img id="cv" style="display:none" alt=""><audio id="au" controls preload="none" style="width:100%;margin-top:8px"></audio>
-<div class="row" style="margin-top:8px"><button data-pl="prev">⏮</button><button data-pl="next">⏭</button><button id="sh" data-pl="shuf">🔀 Náhodně</button></div><ul id="tl"></ul></details>
+<audio id="au" preload="none"></audio>
+<div id="mb"><i id="mbp"></i><div class="mbi"><span id="mbc"></span><div class="mbt"><b id="mbn">Hudba</b><small id="mbs"></small></div><button data-pa="prev">⏮</button><button class="pp" id="mbb" data-pa="toggle">▶</button><button data-pa="next">⏭</button></div></div>
+<div id="sh"><img id="shbg" alt=""><div class="shi"><div class="shh"><button data-pa="close" aria-label="Zavřít">⌄</button><span>Přehrává se</span><span style="width:32px"></span></div>
+<div id="shc"></div><div class="sht"><b id="shn">Hudba</b></div><input type="range" id="sk" min="0" max="1000" value="0"><div class="tm"><span id="t1">0:00</span><span id="t2">0:00</span></div>
+<div class="ctl"><button data-pa="shuf" id="bsh">🔀</button><button data-pa="prev">⏮</button><button class="big" id="bpp" data-pa="toggle">▶</button><button data-pa="next">⏭</button><button data-pa="rep" id="brp">🔁</button></div>
+<h2>Playlist</h2><ul id="tl"></ul></div></div>
 <div class="row" id="modes"></div>
 <div class="row" id="groups"></div>
 <div class="bar"><i id="pb"></i></div>
@@ -68,22 +87,41 @@ async function sendRp(n){const t=$("rpt").value.trim();if(!t)return;const p=P[n-
  try{const b={subject:`Poznávačka: č. ${n} ${p.name}`,cislo:n,rostlina:p.name,zprava:t,stranka:location.href};if(FORM.key)b.access_key=FORM.key;
   const r=await fetch(FORM.url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(b)});
   if(!r.ok)throw 0;$("rps").textContent="Odesláno, díky! ✓";setTimeout(()=>{const m=$("rp");if(m)m.remove()},1200)}catch(e){$("rps").textContent="Odeslání se nepovedlo."}}
-let TR=[],CV={},ti=-1,shuf=false;
-const AX=/\.(mp3|m4a|ogg|oga|opus|wav|flac|aac|weba)$/i,JX=/\.jpe?g$/i,nice=f=>f.replace(AX,"").replace(/_/g," "),bs=f=>f.replace(/\.[^.]+$/,"").toLowerCase();
+let TR=[],CV={},ti=-1,shuf=false,rep=0,seeking=false;
+const au=$("au"),AX=/\.(mp3|m4a|ogg|oga|opus|wav|flac|aac|weba)$/i,JX=/\.jpe?g$/i,nice=f=>f.replace(AX,"").replace(/_/g," "),bs=f=>f.replace(/\.[^.]+$/,"").toLowerCase();
 const cov=k=>{const f=CV[bs(TR[k])];return f?"hudba/"+encodeURIComponent(f):""};
-function drawTr(){$("tl").innerHTML=TR.length?TR.map((f,k)=>{const c=cov(k);return `<li><button class="${k===ti?"cur":""}" data-tr="${k}">${c?`<img class="th" src="${c}" alt="">`:""}${k===ti?"▶ ":""}${nice(f)}</button></li>`}).join(""):'<li class="sub">Zatím žádné písničky (složka hudba/).</li>'}
-function playTr(k){if(!TR.length)return;ti=(k+TR.length)%TR.length;const a=$("au"),c=cov(ti),v=$("cv");a.src="hudba/"+encodeURIComponent(TR[ti]);a.play().catch(()=>{});
- if(c){v.src=c;v.style.display="block"}else v.style.display="none";
- try{if("mediaSession" in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:nice(TR[ti]),artwork:c?[{src:new URL(c,location.href).href,sizes:"512x512",type:"image/jpeg"}]:[]});navigator.mediaSession.setActionHandler("nexttrack",nextTr);navigator.mediaSession.setActionHandler("previoustrack",()=>playTr(ti-1))}}catch(e){}
- drawTr()}
+const fmt=t=>isFinite(t)&&t>0?Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"):"0:00";
+const ph=(c,cls)=>c?`<img class="${cls}" src="${c}" alt="">`:`<div class="${cls} ph">♪</div>`;
+function ico(){const p=!au.paused;$("mbb").textContent=p?"⏸":"▶";$("bpp").textContent=p?"⏸":"▶"}
+function prog(){const d=au.duration,t=au.currentTime,f=d?t/d:0;$("mbp").style.width=f*100+"%";if(!seeking){$("sk").value=f*1000;$("t1").textContent=fmt(t)}$("t2").textContent=fmt(d)}
+function drawTr(){$("tl").innerHTML=TR.length?TR.map((f,k)=>`<li><button class="${k===ti?"cur":""}" data-tr="${k}">${ph(cov(k),"th")}<span>${k===ti&&!au.paused?"▶ ":""}${nice(f)}</span></button></li>`).join(""):'<li class="sub">Zatím žádné písničky (složka hudba/).</li>'}
+function setUI(){const has=ti>=0,n=has?nice(TR[ti]):"Hudba",c=has?cov(ti):"";
+ $("mbn").textContent=n;$("mbs").textContent=has?"":"Vyber písničku";$("shn").textContent=n;
+ $("mbc").innerHTML=ph(c,"mbcv");$("shc").innerHTML=ph(c,"shcv");const bg=$("shbg");if(c){bg.src=c;bg.style.display="block"}else bg.style.display="none";
+ $("bsh").classList.toggle("act",shuf);$("brp").textContent=rep===2?"🔂":"🔁";$("brp").classList.toggle("act",rep>0);
+ $("mb").style.display=TR.length?"block":"none";ico();prog();drawTr()}
+function playTr(k){if(!TR.length)return;ti=(k+TR.length)%TR.length;au.src="hudba/"+encodeURIComponent(TR[ti]);au.play().catch(()=>{});
+ try{if("mediaSession" in navigator){const c=cov(ti);navigator.mediaSession.metadata=new MediaMetadata({title:nice(TR[ti]),artwork:c?[{src:new URL(c,location.href).href,sizes:"512x512",type:"image/jpeg"}]:[]});navigator.mediaSession.setActionHandler("nexttrack",nextTr);navigator.mediaSession.setActionHandler("previoustrack",()=>playTr(ti-1))}}catch(e){}
+ setUI()}
 function nextTr(){if(!TR.length)return;if(shuf&&TR.length>1){let k;do{k=Math.floor(Math.random()*TR.length)}while(k===ti);playTr(k)}else playTr(ti+1)}
-async function loadTracks(){try{const o=JSON.parse(localStorage.getItem("pzt2")||"{}");TR=o.t||[];CV=o.c||{}}catch(e){}drawTr();
+function endedTr(){if(rep===2){au.currentTime=0;au.play()}else if(!shuf&&rep===0&&ti===TR.length-1){setUI()}else nextTr()}
+function pa(a){
+ if(a==="toggle"){if(ti<0)playTr(shuf?Math.floor(Math.random()*TR.length):0);else if(au.paused)au.play();else au.pause()}
+ else if(a==="next")nextTr();
+ else if(a==="prev"){if(ti>=0&&au.currentTime>3)au.currentTime=0;else playTr(ti<0?0:ti-1)}
+ else if(a==="shuf"){shuf=!shuf;setUI()}else if(a==="rep"){rep=(rep+1)%3;setUI()}
+ else if(a==="open"){$("sh").classList.add("open");document.body.style.overflow="hidden"}
+ else if(a==="close"){$("sh").classList.remove("open");document.body.style.overflow=""}}
+async function loadTracks(){try{const o=JSON.parse(localStorage.getItem("pzt2")||"{}");TR=o.t||[];CV=o.c||{}}catch(e){}setUI();
  try{const h=location.hostname.split(".")[0],r=location.pathname.split("/")[1];if(!location.hostname.endsWith("github.io")||!r)return;
   const j=await(await fetch(`https://api.github.com/repos/${h}/${r}/contents/hudba`)).json();if(!Array.isArray(j))return;
   const nm=j.map(x=>x.name);TR=nm.filter(n=>AX.test(n)).sort((a,b)=>a.localeCompare(b,"cs",{numeric:true}));
   CV={};nm.filter(n=>JX.test(n)).forEach(n=>CV[bs(n)]=n);
-  try{localStorage.setItem("pzt2",JSON.stringify({t:TR,c:CV}))}catch(e){}drawTr()}catch(e){}}
-$("au").addEventListener("ended",nextTr);
+  try{localStorage.setItem("pzt2",JSON.stringify({t:TR,c:CV}))}catch(e){}if(ti>=0&&ti<TR.length){}else ti=-1;setUI()}catch(e){}}
+au.addEventListener("play",()=>{ico();drawTr()});au.addEventListener("pause",()=>{ico();drawTr()});au.addEventListener("timeupdate",prog);au.addEventListener("loadedmetadata",prog);au.addEventListener("ended",endedTr);
+$("sk").addEventListener("input",()=>{seeking=true;$("t1").textContent=fmt($("sk").value/1000*au.duration)});
+$("sk").addEventListener("change",()=>{if(au.duration)au.currentTime=$("sk").value/1000*au.duration;seeking=false});
+$("mb").addEventListener("click",e=>{if(!e.target.closest("button"))pa("open")});
 function render(){
  $("modes").innerHTML=[["cards","Procvičování"],["list","Seznam"]].map(([m,t])=>`<button class="${mode===m?"on":""}" data-m="${m}">${t}</button>`).join("")+`<button class="${only?"on":""}" data-o="1">Jen co neumím</button><button data-x="1">↺ Reset</button>`;
  $("groups").innerHTML=[["-1","Vše"],...G.map((g,x)=>[x,g[0]])].map(([v,t])=>`<button class="${grp==v?"on":""}" data-g="${v}">${t}</button>`).join("");
@@ -106,8 +144,7 @@ document.addEventListener("click",e=>{const d=e.target.closest("button");if(!d)r
  if(d.dataset.m){mode=d.dataset.m;build()}else if(d.dataset.g){grp=+d.dataset.g;build()}else if(d.dataset.o){only=!only;build()}
  else if(d.dataset.x){if(confirm("Smazat všechno označení Umím / Neumím?")){K={};save();build()}}
  else if(d.dataset.p){K[+d.dataset.p]=d.dataset.v==="1";save();render()}
- else if(d.dataset.tr!==undefined){playTr(+d.dataset.tr)}else if(d.dataset.pl){const v=d.dataset.pl;if(v==="next")nextTr();else if(v==="prev")playTr(ti<0?0:ti-1);else{shuf=!shuf;d.classList.toggle("on",shuf)}}
- else if(d.dataset.rp){openRp()}else if(d.dataset.rc){const m=$("rp");if(m)m.remove()}else if(d.dataset.rs){sendRp(+d.dataset.rs)}
+ else if(d.dataset.tr!==undefined){playTr(+d.dataset.tr)}else if(d.dataset.pa){pa(d.dataset.pa)} else if(d.dataset.rp){openRp()}else if(d.dataset.rc){const m=$("rp");if(m)m.remove()}else if(d.dataset.rs){sendRp(+d.dataset.rs)}
  else if(d.dataset.k){mark(d.dataset.k==="1")}else if(d.dataset.r)build()});
 let sx=0,dx=0,drag=false;
 document.addEventListener("pointerdown",e=>{const c=e.target.closest("#cd");if(!c||e.target.closest("a,button"))return;drag=true;sx=e.clientX;dx=0;c.style.transition="none";try{c.setPointerCapture(e.pointerId)}catch(x){}});
@@ -119,4 +156,3 @@ document.addEventListener("pointerup",endDrag);
 document.addEventListener("pointercancel",()=>{drag=false;const c=$("cd");if(c){c.style.transition="";c.style.transform="";c.style.borderColor=""}});
 build();loadFiles();loadTracks();
 </script></body></html>
- 
