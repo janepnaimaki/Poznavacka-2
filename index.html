@@ -40,7 +40,7 @@ let K={};try{K=JSON.parse(localStorage.getItem("pz")||"{}")}catch(e){}
 const save=()=>{try{localStorage.setItem("pz",JSON.stringify(K))}catch(e){}};
 let IMG={};
 const EX=["jpg","png","jpeg","webp","gif","svg","JPG","PNG","JPEG","jpe","jfif","avif","bmp"];
-const FORM={url:"",key:""}; // <-- sem vlož adresu formuláře (viz návod)
+const FORM={url:"https://api.web3forms.com/submit",key:"67cd7ca2-18a3-4168-bc27-6825fe30aba3"}; // <-- sem vlož adresu formuláře (viz návod)
 let FILES={};
 try{FILES=JSON.parse(localStorage.getItem("pzf")||"{}")}catch(e){}
 async function loadFiles(){try{
