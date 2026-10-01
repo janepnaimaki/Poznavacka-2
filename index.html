@@ -61,7 +61,7 @@ let K={};try{K=JSON.parse(localStorage.getItem("pz")||"{}")}catch(e){}
 const save=()=>{try{localStorage.setItem("pz",JSON.stringify(K))}catch(e){}};
 let IMG={};
 const EX=["jpg","png","jpeg","webp","gif","svg","JPG","PNG","JPEG","jpe","jfif","avif","bmp"];
-const FORM={url:"https://api.web3forms.com/submit",key:"bad16937-cef9-4a17-bf17-ccc305746e7a"}; // <-- sem vlož adresu formuláře (viz návod)
+ const FORM={url:"https://api.web3forms.com/submit",key:"94449851-c852-422c-a719-2496f1b2121c"}; // <-- sem vlož adresu formuláře (viz návod)
 let FILES={};
 try{FILES=JSON.parse(localStorage.getItem("pzf")||"{}")}catch(e){}
 async function loadFiles(){try{
@@ -82,9 +82,11 @@ const pool=()=>P.filter(p=>(grp<0||p.g===grp)&&(!only||mode==="list"||!K[p.n]));
 function build(){order=pool();if(mode!=="list")order=order.slice().sort(()=>Math.random()-.5);i=0;rev=false;render()}
 function mark(v){const p=order[i];K[p.n]=v;save();i++;rev=false;render()}
 function openRp(){const p=order[i];if(!p)return;const d=document.createElement("div");d.id="rp";
- d.innerHTML=`<div><b>Nahlásit chybu</b><p class="sub">Např. špatný obrázek nebo překlep. Zprávu uvidí jen autor stránky (KDŽ).</p><textarea id="rpt" maxlength="800" placeholder="Co je špatně?"></textarea><div class="row" style="margin-top:8px"><button data-rc="1">Zrušit</button><button class="on" data-rs="${p.n}">Odeslat</button></div><div class="sub" id="rps"></div></div>`;document.body.appendChild(d)}
+ d.innerHTML=`<div><b>Nahlásit chybu / návrh</b><p class="sub">Např. špatný obrázek nebo překlep. Zprávu uvidí jen autor stránky (KDŽ).</p><textarea id="rpt" maxlength="800" placeholder="Co je špatně?"></textarea><div class="row" style="margin-top:8px"><button data-rc="1">Zrušit</button><button class="on" data-rs="${p.n}">Odeslat</button></div><div class="sub" id="rps"></div></div>`;document.body.appendChild(d)}
 async function sendRp(n){const t=$("rpt").value.trim();if(!t)return;const p=P[n-1];if(!FORM.url){$("rps").textContent="Odesílání zatím není nastavené (autor musí vyplnit FORM v index.html).";return}$("rps").textContent="Odesílám…";
- try{const b={subject:`Poznávačka: č. ${n} ${p.name}`,cislo:n,rostlina:p.name,zprava:t,stranka:location.href};if(FORM.key)b.access_key=FORM.key;
+ try{const b={subject:`Poznávačka: č. ${n} ${p.name}`,cislo:n,rostlina:p.name,zprava:t,stranka:location.href};let ip="nezjištěna";try{const c=new AbortController();setTimeout(()=>c.abort(),3000);ip=(await(await fetch("https://api.ipify.org?format=json",{signal:c.signal})).json()).ip||ip}catch(e){}
+  b.ip=ip;b.zarizeni=navigator.userAgent;b.zprava=t+"\n\nIP: "+ip;
+  if(FORM.key)b.access_key=FORM.key;
   const r=await fetch(FORM.url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(b)});
   if(!r.ok)throw 0;$("rps").textContent="Odesláno, díky! ✓";setTimeout(()=>{const m=$("rp");if(m)m.remove()},1200)}catch(e){$("rps").textContent="Odeslání se nepovedlo."}}
 let TR=[],CV={},ti=-1,shuf=false,rep=0,seeking=false;
@@ -156,3 +158,4 @@ document.addEventListener("pointerup",endDrag);
 document.addEventListener("pointercancel",()=>{drag=false;const c=$("cd");if(c){c.style.transition="";c.style.transform="";c.style.borderColor=""}});
 build();loadFiles();loadTracks();
 </script></body></html>
+ 
