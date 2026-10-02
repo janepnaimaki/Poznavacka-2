@@ -37,6 +37,11 @@ li .n{width:2.2em;color:var(--mu);text-align:right}li .t{flex:1}li a{color:var(-
 #tl button{display:flex;align-items:center;gap:10px;border:0;background:none;text-align:left;flex:1;padding:6px 2px;color:inherit}#tl button.cur{color:var(--ac);font-weight:600}
 #mp{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin-bottom:10px}#mp summary{cursor:pointer}#tl li{padding:0;border:0}#cv{width:100%;max-width:260px;aspect-ratio:1;object-fit:cover;border-radius:12px;margin:10px auto 0}#tl .th{width:36px;height:36px;border-radius:6px;object-fit:cover;max-height:none}#tl button{display:flex;align-items:center;gap:8px;border:0;background:none;text-align:left;flex:1;padding:6px 2px;color:inherit}#tl button.cur{color:var(--ac);font-weight:600}#cd{position:relative}.flag{position:absolute;top:8px;right:8px;padding:4px 10px}#rp{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}#rp>div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;width:100%;max-width:420px}#rp textarea{width:100%;min-height:90px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;margin-top:6px}#cd{touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .15s,border-color .15s;cursor:grab}img{-webkit-user-drag:none}
 h2{font-size:1rem;margin:18px 0 4px}h2.ok{color:var(--ok)}h2.no{color:var(--no)}li button{padding:4px 9px}li button.on.ok{background:var(--ok);border-color:var(--ok);color:#fff}li button.on.no{background:var(--no);border-color:var(--no);color:#fff}img{max-width:100%;max-height:48vh;border-radius:12px;object-fit:contain}
+/* next-card preview (grows while swiping) */
+#st{position:relative}
+#cd{z-index:1}
+#pk{position:absolute;top:0;left:0;right:0;margin:12px 0;z-index:0;transform:scale(.9);opacity:.6;pointer-events:none;transition:transform .15s,opacity .15s}
+.row{position:relative;z-index:2}
 </style></head><body><main>
 <h1>🌿 Poznávačka: výtrusné a cévnaté rostliny</h1>
 <div class="sub">Vyšší gymnázium · 130 druhů · <span id="stat"></span></div>
@@ -78,6 +83,7 @@ async function idbGet(){try{const d=await idb();return await new Promise(res=>{c
 let mode="cards",grp=-1,only=false,i=0,rev=false,order=[];
 const $=id=>document.getElementById(id);
 const img=p=>"https://www.google.com/search?tbm=isch&q="+encodeURIComponent(p.name.replace(/\(|\)/g,"")+" rostlina");
+const src=p=>"obrazky/"+(FILES[p.n]?encodeURIComponent(FILES[p.n]):String(p.n).padStart(3,"0")+".jpg");
 const pool=()=>P.filter(p=>(grp<0||p.g===grp)&&(!only||mode==="list"||!K[p.n]));
 function build(){order=pool();if(mode!=="list")order=order.slice().sort(()=>Math.random()-.5);i=0;rev=false;render()}
 function mark(v){const p=order[i];K[p.n]=v;save();i++;rev=false;render()}
@@ -137,9 +143,10 @@ function render(){
   $("v-list").innerHTML=sec("Neumím","no",p=>K[p.n]===false)+sec("Umím","ok",p=>K[p.n]===true)+sec("Neoznačeno","",p=>K[p.n]===undefined);return}
  const el=$("v-cards");
  if(i>=order.length){el.innerHTML=`<div class="card"><div class="name">${order.length?"Hotovo 🎉":"Nic k procvičení"}</div><button data-r="1">Znovu</button></div>`;return}
- const p=order[i];
- el.innerHTML=`<div class="card" id="cd"><button class="flag" data-rp="1" title="Nahlásit chybu" aria-label="Nahlásit chybu">⚑</button><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="obrazky/${FILES[p.n]?encodeURIComponent(FILES[p.n]):String(p.n).padStart(3,"0")+".jpg"}" data-n="${p.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">${rev?p.name:"?"}</div><div class="grp">${G[p.g][0]}${rev?"":" · klikni na obrázek pro název"}</div>
- <div class="row" style="justify-content:center;margin-top:10px"><a class="btn" href="${link(p)}" target="_blank" rel="noopener">🔍 Další obrázky</a></div></div>
+ const p=order[i],q=order[i+1],r=order[i+2];
+ if(r)new Image().src=src(r);
+ el.innerHTML=`<div id="st">${q?`<div class="card" id="pk"><div class="num">č. ${q.n} · ${i+2}/${order.length}</div><img src="${src(q)}" data-n="${q.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">?</div><div class="grp">${G[q.g][0]}</div></div>`:""}<div class="card" id="cd"><button class="flag" data-rp="1" title="Nahlásit chybu" aria-label="Nahlásit chybu">⚑</button><div class="num">č. ${p.n} · ${i+1}/${order.length}</div><img src="${src(p)}" data-n="${p.n}" data-i="0" onerror="nx(this)" draggable="false" alt=""><div class="name">${rev?p.name:"?"}</div><div class="grp">${G[p.g][0]}${rev?"":" · klikni na obrázek pro název"}</div>
+ <div class="row" style="justify-content:center;margin-top:10px"><a class="btn" href="${link(p)}" target="_blank" rel="noopener">🔍 Další obrázky</a></div></div></div>
  <div class="row"><button class="no" data-k="0" style="flex:1">← Neumím</button><button class="ok" data-k="1" style="flex:1">Umím →</button></div>`;
 }
 document.addEventListener("click",e=>{const d=e.target.closest("button");if(!d)return;
@@ -150,12 +157,13 @@ document.addEventListener("click",e=>{const d=e.target.closest("button");if(!d)r
  else if(d.dataset.k){mark(d.dataset.k==="1")}else if(d.dataset.r)build()});
 let sx=0,dx=0,drag=false;
 document.addEventListener("pointerdown",e=>{const c=e.target.closest("#cd");if(!c||e.target.closest("a,button"))return;drag=true;sx=e.clientX;dx=0;c.style.transition="none";try{c.setPointerCapture(e.pointerId)}catch(x){}});
-document.addEventListener("pointermove",e=>{if(!drag)return;const c=$("cd");if(!c)return;dx=e.clientX-sx;c.style.transform=`translateX(${dx}px) rotate(${dx/25}deg)`;c.style.borderColor=dx>40?"var(--ok)":dx<-40?"var(--no)":""});
+document.addEventListener("pointermove",e=>{if(!drag)return;const c=$("cd");if(!c)return;dx=e.clientX-sx;c.style.transform=`translateX(${dx}px) rotate(${dx/25}deg)`;c.style.borderColor=dx>40?"var(--ok)":dx<-40?"var(--no)":"";
+ const k=$("pk");if(k){const t=Math.min(1,Math.abs(dx)/120);k.style.transition="none";k.style.transform=`scale(${.9+.1*t})`;k.style.opacity=.6+.4*t}});
 function endDrag(){if(!drag)return;drag=false;const c=$("cd");if(!c)return;c.style.transition="";
+ const k=$("pk"),go=Math.abs(dx)>90;if(k){k.style.transition="";k.style.transform=go?"scale(1)":"";k.style.opacity=go?1:""}
  if(Math.abs(dx)>90){c.style.transform=`translateX(${dx>0?700:-700}px) rotate(${dx/10}deg)`;const v=dx>0;setTimeout(()=>mark(v),150)}
  else if(Math.abs(dx)<8){rev=!rev;render()}else{c.style.transform="";c.style.borderColor=""}}
 document.addEventListener("pointerup",endDrag);
-document.addEventListener("pointercancel",()=>{drag=false;const c=$("cd");if(c){c.style.transition="";c.style.transform="";c.style.borderColor=""}});
+document.addEventListener("pointercancel",()=>{drag=false;const c=$("cd");if(c){c.style.transition="";c.style.transform="";c.style.borderColor=""}const k=$("pk");if(k){k.style.transition="";k.style.transform="";k.style.opacity=""}});
 build();loadFiles();loadTracks();
 </script></body></html>
- 
